@@ -42,6 +42,7 @@ class Gunman {
     this.gunmanPlaced = {}
   }
 
+  // First gunman
   firstGunmanNode() {
     let nodeX = 0
     let nodeY = 0
@@ -53,10 +54,10 @@ class Gunman {
         this.markGunman(nodeY, nodeX)
         boolean.map(bool => {
           directionType.map(dir => {
-            this.possibilityGunmanNode(nodeY, nodeX, 'forward', 'backward', dir, bool)
-            this.possibilityGunmanNode(nodeY, nodeX, 'backward', 'backward', dir, bool)
-            this.possibilityGunmanNode(nodeY, nodeX, 'backward', 'forward', dir, bool)
-            this.possibilityGunmanNode(nodeY, nodeX, 'forward', 'forward', dir, bool)
+            this.possGunmanNode(nodeY, nodeX, 'forward', 'backward', dir, bool)
+            this.possGunmanNode(nodeY, nodeX, 'backward', 'backward', dir, bool)
+            this.possGunmanNode(nodeY, nodeX, 'backward', 'forward', dir, bool)
+            this.possGunmanNode(nodeY, nodeX, 'forward', 'forward', dir, bool)
           })
         })
       }
@@ -65,7 +66,8 @@ class Gunman {
     }
   }
 
-  possibilityGunmanNode(nodeY, nodeX, directionY, directionX, directionType, zigzag) {
+  // Possibility
+  possGunmanNode(nodeY, nodeX, directionY, directionX, directionType, zigzag) {
     let directionParam = {}
     let zigzagActive = false
     let oppositeY = false
@@ -75,10 +77,10 @@ class Gunman {
       oppositeX = zigzagActive && directionType === 'horizontal'
       directionY = this.changeDirectionOpposite(directionY, oppositeY)
       directionX = this.changeDirectionOpposite(directionX, oppositeX)
-      directionParam.y = this.directionParam(directionY, this.matrix[1])
-      directionParam.x = this.directionParam(directionX, this.matrix[0])
+      directionParam.y = this.possDirectionParam(directionY, this.matrix[1])
+      directionParam.x = this.possDirectionParam(directionX, this.matrix[0])
 
-      let nextNode = this.nextPossibilityNode(nodeY, nodeX, directionParam, directionType, zigzag)
+      let nextNode = this.possNextNode(nodeY, nodeX, directionParam, directionType, zigzag)
       nodeY = nextNode[0]
       nodeX = nextNode[1]
       zigzagActive = nextNode[2]
@@ -92,7 +94,7 @@ class Gunman {
     this.saveGunmanPlaced()
   }
 
-  nextPossibilityNode(nodeY, nodeX, directionParam, directionType, zigzag) {
+  possNextNode(nodeY, nodeX, directionParam, directionType, zigzag) {
     let zigzagActive = false
     let param1 = 'x',
       param2 = 'y',
@@ -120,7 +122,7 @@ class Gunman {
     return directionType === 'horizontal' ? [node2, node1, zigzagActive] : [node1, node2, zigzagActive]
   }
 
-  directionParam(direction, matrix) {
+  possDirectionParam(direction, matrix) {
     const trigger = direction === 'forward' ? matrix - 1 : 0
     const reset = direction === 'forward' ? 0 : matrix - 1
     const increment = direction === 'forward' ? 1 : -1
@@ -132,6 +134,7 @@ class Gunman {
     return direction
   }
 
+  // Step
   stepGunman(nodeY, nodeX) {
     // up
     if (nodeY !== 0) this.stepDirection(nodeY, nodeX, 'y', 'backward')
@@ -170,7 +173,13 @@ class Gunman {
   }
 }
 
-// Execute
+// Define
+// const matrix = [4, 4]
+// const walls = {}
+// walls[0] = [0, 1, 2]
+// walls[2] = [1]
+// walls[3] = [0, 1, 2]
+
 const matrix = [8, 8]
 const walls = {}
 walls[0] = [1, 3, 5, 7]
